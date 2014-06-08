@@ -1,0 +1,66 @@
+{% load bootstrap %}
+
+<html>
+<head>
+<head>
+<title>Ideate - a Platform to showcase your Great Ideas!</title>
+    <link rel="stylesheet" href="http://bootswatch.com/united/bootstrap.min.css" media="screen">
+    <link rel="stylesheet" href="http://bootswatch.com/bower_components/font-awesome/css/font-awesome.min.css" media="screen">
+    <link rel="stylesheet" href="http://bootswatch.com/assets/css/bootswatch.min.css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+
+
+</head>
+<body>
+
+        <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="/" class="navbar-brand"><i class="fa fa-lightbulb-o fa-2x"> </i>Ideate</a>
+          
+        </div>
+   
+
+
+
+           <ul class="nav navbar-nav navbar-right">
+           {% if user.is_authenticated %}
+            <li><a href="{% url 'link_create' %}">Create Event</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+            <li><a href="{% url 'profile' slug=user.username %}"><b>{{ user.username }}</b></a></li> 
+
+    
+            {% else %}
+          <li><a href="{% url 'registration_register' %}"> Register</a></li> 
+          <li><a href="{% url 'login' %}">Login</a></li>     
+           {% endif %}
+                  
+          </ul> </div>
+      </div>
+    </div>
+    <!-- <br/> -->
+   
+    {% block content %}
+    
+
+
+    {% endblock content %}
+
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+    <script src="{{ STATIC_URL }}js/bootswatch.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}jquery/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}jspdf.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}jspdf.plugin.standard_fonts_metrics.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}jspdf.plugin.split_text_to_size.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}jspdf.plugin.from_html.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}FileSaver.js"></script>  
+</body>
+<footer>
+  <!-- <p> -->
+          <!-- Built with lots of <span style="color: #C0392B;">♥</span>& python , a <a href="http://codeforgood.in" target="_blank">CodeforGood</a> Project -->
+        <!-- </p> -->
+</footer>
+</html>

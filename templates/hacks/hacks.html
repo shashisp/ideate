@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<!-- <div align="center">
+    <div class="col-sm-4">
+    <P><i class="fa fa-bullhorn fa-5x"></i>Publish Eevnts</P> 
+    </div>
+    <div class="col-sm-4">
+    <P><i class="fa fa-users fa-5x"></i>Reachout Many</P>
+    </div>
+    <div class="col-sm-4">
+     <P><i class="fa fa-heart fa-5x"></i>Spread the Love</P>
+    </div>
+    </div>
+ -->
+
+{% for link in x %}
+ <div class="row">
+  <div class="col-sm-6 col-md-4">
+    <div class="thumbnail">
+      <img src="{{ link.logo }}" alt="...">
+      <div class="caption">
+        <h3>{{ link.teamname }}</h3>
+        <p>...</p>
+        <p><a href="#" class="btn btn-primary" role="button">Know More!</a> 
+      </div>
+    </div>
+  </div>
+</div>   
+    {% endfor %}
+  
+
+
+    
+
+  
+</form>
+
+
+
+
+{% endfor %}
+</ol>
+<!-- 
+{% if is_paginated %}
+
+
+<div class="pagination pagination-lg">
+    {% if page_obj.has_next %}
+   <li> <a href="?page={{ page_obj.next_page_number }}">More &raquo;</a></li>
+    {% endif %}
+</div>
+{% endif %}
+ -->
+{% endblock %}

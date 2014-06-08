@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>html2canvas example</title>
+
+   <script type="text/javascript" src="jquery/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="jspdf.js"></script>
+<script type="text/javascript" src="jspdf.plugin.standard_fonts_metrics.js"></script>
+<script type="text/javascript" src="jspdf.plugin.split_text_to_size.js"></script>
+<script type="text/javascript" src="jspdf.plugin.from_html.js"></script>
+<script type="text/javascript" src="FileSaver.js"></script>
+<script type="text/javascript" src="/tce-js/jquery-ui/js/jquery-1.10.2.js" charset="utf-8"></script>    <script type="text/javascript" src="/tce-js/jquery-ui/js/jquery-ui-1.10.4.custom.min.js" charset="utf-8"></script>  <script type="text/javascript" src="/tce-js/store-locator/js/handlebars-1.0.0.js" charset="utf-8"></script>     <script type="text/javascript" src="/tce-js/store-locator/js/jquery.storelocator.js" charset="utf-8"></script>      <script type="text/javascript" src="/tce-js/moment/moment.min.js" charset="utf-8"></script>     <script type="text/javascript" src="/tce-js/validate/jquery.validate.min.js" charset="utf-8"></script>      <script type="text/javascript" src="/tce-js/opentip/opentip-jquery.js" charset="utf-8"></script>    <script type="text/javascript" src="/tce-js/tce-js.js" charset="utf-8"></script>    <script type="text/javascript" src="https://www.google.com/jsapi" charset="utf-8"></script>     <script type="text/javascript" src="/tce-js/jsPDF/jspdf.js"></script>   <script type="text/javascript" src="/tce-js/jsPDF/jspdf.plugin.standard_fonts_metrics.js"></script>     <script type="text/javascript" src="/tce-js/jsPDF/jspdf.plugin.split_text_to_size.js"></script>         <script type="text/javascript" src="/tce-js/jsPDF/jspdf.plugin.addimage.js"></script>   <script type="text/javascript" src="/tce-js/jsPDF/jspdf.plugin.from_html.js"></script>  <script type="text/javascript" src="/tce-js/jsPDF/jspdf.plugin.split_text_to_size.js"></script>     <script type="text/javascript" src="/tce-js/jsPDF/jspdf.plugin.png_support.js"></script>    <script type="text/javascript" src="/tce-js/jsPDF/jspdf.plugin.standard_fonts_metrics.js"></script>     <script type="text/javascript" src="/tce-js/jsPDF/png.js"></script>     <script type="text/javascript" src="/tce-js/jsPDF/zlib.js"></script>    <script type="text/javascript" src="/tce-js/jsPDF/FileSaver.js"></script>   <script type="text/javascript" src="/tce-js/underscore/underscore-min.js" charset="utf-8"></script>     <script type="text/javascript" src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
+
+<script type="text/javascript">
+function demoFromHTML(){
+    alert("Called");
+    var CLIENT_ID = '675723224056-b2q4jaaa8megiol2olq8bcmoilubnb7o.apps.googleusercontent.com';
+
+    var SCOPES = 'https://www.googleapis.com/auth/drive';
+
+
+    /**
+    * Called when the client library is loaded to start the auth flow.
+    */
+    function handleClientLoad() {
+        window.setTimeout(checkAuth, 1);
+    };
+
+    /**
+    * Check if the current user has authorized the application.
+    */
+    function checkAuth() {
+        gapi.auth.authorize(
+            {'client_id': CLIENT_ID, 'scope': SCOPES, 'immediate': true},
+        handleAuthResult);
+    };
+
+    /**
+    * Called when authorization server replies.
+    *
+    * @param {Object} authResult Authorization result.
+    */
+    function handleAuthResult(authResult) {
+        if (authResult && !authResult.error) {
+        // Access token has been successfully retrieved, requests can be sent to the API.
+
+       var doc = new jsPDF();
+         var source = $('#testcase').get(0);
+         var specialElementHandlers = {
+             '#bypassme': function(element, renderer) {
+                 return true;
+             }
+         };
+
+         doc.fromHTML(
+             source, // HTML string or DOM elem ref.
+             15,    // x coord
+             15,    // y coord
+             {
+                 'width': 170, // max width of content on PDF
+                 'elementHandlers': specialElementHandlers
+             });
+
+
+            var MyBlob = doc.output('blob');
+            MyBlob.name = "test.pdf";
+
+            insertFile(MyBlob);
+
+        } else {
+            alert("FAILED AUTHORIZING");
+            // No access token could be retrieved, show the button to start the authorization flow.
+        };
+    };
+
+    /**
+    * Insert new file.
+    *
+    * @param {File} fileData File object to read data from.
+    * @param {Function} callback Function to call when the request is complete.
+    */
+    function insertFile(fileData, callback) {
+        const boundary = '-------314159265358979323846';
+        const delimiter = "\r\n--" + boundary + "\r\n";
+        const close_delim = "\r\n--" + boundary + "--";
+
+        var reader = new FileReader();
+        reader.readAsBinaryString(fileData);
+        reader.onload = function(e) {
+            var contentType = fileData.type || 'application/octet-stream';
+            var metadata = {
+                'title': fileData.name,
+                'mimeType': contentType
+
+            };
+
+            var base64Data = btoa(reader.result);
+            var multipartRequestBody =
+                delimiter +
+                'Content-Type: application/json\r\n\r\n' +
+                JSON.stringify(metadata) +
+                delimiter +
+                'Content-Type: ' + contentType + '\r\n' +
+                'Content-Transfer-Encoding: base64\r\n' +
+                '\r\n' +
+                base64Data +
+                close_delim;
+
+            var request = gapi.client.request({
+                'path': '/upload/drive/v2/files/',
+                'method': 'POST',
+                'params': {'uploadType': 'multipart'},
+                'headers': {
+                'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
+                },
+            'body': multipartRequestBody
+            });
+
+            if (!callback) {
+                callback = function(file) {
+                console.log(file)
+                };
+            }
+            request.execute(callback);
+        };
+    };
+}
+    </script>
+    <script type="text/javascript" src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
+</head>
+<body id="target">
+<a href="javascript:demoFromHTML()" class="button">Generate Report</a>
+<div id="testcase">
+    <h1>
+        We support special element handlers. Register them with jQuery-style.
+    </h1>
+</div>
+</body>
+</html>

@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<!-- <div align="center">
+    <div class="col-sm-4">
+    <P><i class="fa fa-bullhorn fa-5x"></i>Publish Eevnts</P> 
+    </div>
+    <div class="col-sm-4">
+    <P><i class="fa fa-users fa-5x"></i>Reachout Many</P>
+    </div>
+    <div class="col-sm-4">
+     <P><i class="fa fa-heart fa-5x"></i>Spread the Love</P>
+    </div>
+    </div>
+ -->
+ <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+
+<div id="x">
+            
+    
+    <div class="row jumbotron_search">
+      <div class="col-md-12 text-center">
+        <ul class="list-unstyled index_welcome">
+         
+
+           <div id="container">
+    <li><h1 style="color:fff">Find the Nearest  
+    <div id="caption">
+        <span><a href="#">Hackathons</a></span>
+        <span><a href="#">Discussions</a></span>
+        <span><a href="#">Meetups</a></span>
+        <span><a href="#">Contests</a></span>
+    </div>
+    around you
+    </h1></li>
+</div>
+<script>
+//$('#caption p:gt(0)').hide();
+$("#caption").css("width", $("#caption > span:first-child").width());
+$("#caption").css("height", $("#caption > span:first-child").height());
+var captionIdx = 0;
+var captionItemCount = $("#caption > span").length;
+setInterval(function() {
+    $("#caption span:eq(" + captionIdx + ")").fadeOut("slow");
+    captionIdx = (captionIdx + 1) % captionItemCount;
+    var $next = $("#caption span:eq(" + captionIdx + ")");
+    $("#caption").css("width", $next.width());
+    $("#caption").css("height", $next.height());
+    $next.fadeIn("slow");
+}, 2000);
+</script>
+<style>
+#container {
+    text-align: center;
+    /*border: 1px solid blue;*/
+       /* for illustration of size adaption */
+    display: block;
+}
+ 
+#caption {
+    padding: 0px;
+    display: inline-block;
+    position: relative;
+    vertical-align: bottom;
+    
+    -webkit-transition: width 0.25s linear;
+    -moz-transition: width 0.25s linear;
+    -ms-transition: width 0.25s linear;
+    -o-transition: width 0.25s linear;
+    transition: width 0.25s linear; 
+}
+ 
+#caption > span {
+    display: none;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+ 
+#caption > span:first-child {
+    display: inline-block;
+}
+</style>
+           <br/>
+           <br/>
+           <br/>
+          <li>
+            <form id="search-form" action="/search/">
+              
+            <ul class="list-inline index_search">
+                
+                <li>
+                   <input type="text" id="search_term" class="form-control input-lg " placeholder="what you are Looking for ?" size="40" name="q">   
+                                 <!-- <input type="text" name="your-email" placeholder="you@yourmail.com" class="form-control cform-text input-lg" size="40" title="your email"> -->
+              <!-- <input type="submit" value="Sign up" class="cform-submit"> -->
+
+                </li>
+                
+                <!-- <li> -->
+                   <!-- <input type="text" id="search_term" class="form-control input-lg " placeholder="In Hubli" size="10" name="q">    -->
+                                 <!-- <input type="text" name="your-email" placeholder="you@yourmail.com" class="form-control cform-text input-lg" size="40" title="your email"> -->
+              <!-- <input type="submit" value="Sign up" class="cform-submit"> -->
+
+                <!-- </li> -->
+                
+                  
+                  <a class="remove_selected_location" href="/clear-location/" style="display:none" id="selected-location-overlay">
+                    <div class="selected_location">
+                      <div class="selected_location_name pull-left" id="location_name">
+                        
+                      </div>
+                      <div class="selected_location_cross pull-right">
+                        <span class="small">×</span>
+                      </div>
+                      <div class="clearfix"></div>
+                    </div>
+                  </a>
+                
+                </li>
+                    
+    
+                <li class="search_button_index">
+                  <input type="submit" class="btn btn-info btn-large" value="Search">
+                </li>
+    
+            </ul>
+            </form>
+          </li>
+          
+        </ul> 
+        
+      </div>
+    </div>
+  
+                
+    </div>
+    </div>
+</div>
+<style>
+#x {background-image:url("http://www.zomato.com/images/homescreens/tourimages/feedtour/feed-search-bg2.jpg");}
+</style>
+   <center><h2>Recent Hackathons</h2></center>
+<hr/>
+{% if is_paginated %}
+<ol start="{{ page_obj.start_index }}">
+{% else %}
+<ol>
+{% endif %}
+{% for link in object_list %}
+<form method="post" action="{% url 'vote' %}" class="vote_form">
+   
+    {% csrf_token %}
+    <input type="hidden" id="id_link" name="link" class="hidden_id" value="{{ link.pk }}" />
+    <input type="hidden" id="id_voter" name="voter" class="hidden_id" value="{{ user.pk }}" />
+    {% if not user.is_authenticated %}
+    <button disabled title="Please login to vote">+</button>
+    {% elif link.pk not in voted %}
+    <!-- <button>+</button> -->
+    {% else %}
+    <!-- <button>-</button> -->
+    {% endif %}
+   
+    <!-- thumbnails -->
+
+ <div class="row">
+  <div class="col-sm-6 col-md-4">
+    <div class="thumbnail">
+      <img src="{{ link.logo }}" alt="...">
+      <div class="caption">
+        <h3>{{ link.title }}</h3>
+        <p>...</p>
+        <p><a href="{% url 'link_detail' pk=link.pk %}" class="btn btn-primary" role="button">Know More!</a> 
+      </div>
+    </div>
+  </div>
+</div>
+<!--  -->
+
+
+    
+
+  
+</form>
+
+
+
+
+{% endfor %}
+</ol>
+<!-- 
+{% if is_paginated %}
+
+
+<div class="pagination pagination-lg">
+    {% if page_obj.has_next %}
+   <li> <a href="?page={{ page_obj.next_page_number }}">More &raquo;</a></li>
+    {% endif %}
+</div>
+{% endif %}
+ -->
+{% endblock %}
